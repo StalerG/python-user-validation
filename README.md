@@ -14,7 +14,7 @@
 Просто скопируй файл `polymorph.py` в свой проект!
 
 ```python
-from user import User
+from polymorph import User
 
 user = User('username', 'user Email')
 print(user)  
