@@ -1,7 +1,7 @@
-![Python 3.9+](https://img.shields.io/badge/python-3.9+-blue?style=flat&logo=python&logoColor=white&link=)
-![Tests 12 passed](https://img.shields.io/badge/tests-12_passed-brightgreen?style=flat&link=)
-![License MIT](https://img.shields.io/badge/license-MIT-yellow?style=flat&link=)
-![Dependencies 0](https://img.shields.io/badge/dependencies-0-success?style=flat&link=)
+![Python](https://badgen.net/badge/Python/3.9%2B/blue)
+![Tests](https://badgen.net/badge/Tests/12%20passed/green)
+![License](https://badgen.net/badge/License/MIT/yellow)
+![Dependencies](https://badgen.net/badge/Dependencies/0/green)
 
 # 🧪 Python User Validation Class
 
