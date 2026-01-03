@@ -1,98 +1,21 @@
-<!-- Бейджи с максимальным неон-эффектом -->
 <div align="center" style="margin: 25px 0;">
-<table style="border-spacing: 12px; border-collapse: separate; margin: 0 auto; background: #0a0a0a; padding: 15px; border-radius: 12px;">
+<table style="border-spacing: 10px; border-collapse: separate; margin: 0 auto;">
 <tr>
-<!-- Python -->
-<td style="
-  padding: 10px 18px;
-  background: #111827;
-  color: #60a5fa !important;
-  border-radius: 10px;
-  font-family: 'Segoe UI', monospace;
-  font-size: 15px;
-  font-weight: 800;
-  border: 3px solid #3b82f6;
-  box-shadow: 
-    0 0 15px #3b82f6,
-    0 0 25px #3b82f6,
-    0 0 35px rgba(59, 130, 246, 0.7),
-    inset 0 0 10px rgba(59, 130, 246, 0.4);
-  text-shadow: 0 0 8px #60a5fa, 0 0 12px #60a5fa;
-  white-space: nowrap;
-  letter-spacing: 1px;
-">
-🔷 <strong>PYTHON 3.9+</strong>
+<td style="padding: 9px 17px; background: #2563eb; color: white; border-radius: 8px; font-family: monospace; font-size: 14px; font-weight: bold; border: 2px solid #1d4ed8; box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.2); white-space: nowrap;">
+🐍 <strong>Python 3.9+</strong>
 </td>
-
-<!-- Tests -->
-<td style="
-  padding: 10px 18px;
-  background: #052e16;
-  color: #4ade80 !important;
-  border-radius: 10px;
-  font-family: 'Segoe UI', monospace;
-  font-size: 15px;
-  font-weight: 800;
-  border: 3px solid #22c55e;
-  box-shadow: 
-    0 0 15px #22c55e,
-    0 0 25px #22c55e,
-    0 0 35px rgba(34, 197, 94, 0.7),
-    inset 0 0 10px rgba(34, 197, 94, 0.4);
-  text-shadow: 0 0 8px #4ade80, 0 0 12px #4ade80;
-  white-space: nowrap;
-  letter-spacing: 1px;
-">
-✅ <strong>TESTS: 12</strong>
+<td style="padding: 9px 17px; background: #16a34a; color: white; border-radius: 8px; font-family: monospace; font-size: 14px; font-weight: bold; border: 2px solid #15803d; box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.2); white-space: nowrap;">
+✅ <strong>Tests: 12</strong>
 </td>
-
-<!-- License -->
-<td style="
-  padding: 10px 18px;
-  background: #451a03;
-  color: #fbbf24 !important;
-  border-radius: 10px;
-  font-family: 'Segoe UI', monospace;
-  font-size: 15px;
-  font-weight: 800;
-  border: 3px solid #f59e0b;
-  box-shadow: 
-    0 0 15px #f59e0b,
-    0 0 25px #f59e0b,
-    0 0 35px rgba(245, 158, 11, 0.7),
-    inset 0 0 10px rgba(245, 158, 11, 0.4);
-  text-shadow: 0 0 8px #fbbf24, 0 0 12px #fbbf24;
-  white-space: nowrap;
-  letter-spacing: 1px;
-">
-⚡ <strong>MIT LICENSE</strong>
+<td style="padding: 9px 17px; background: #ca8a04; color: white; border-radius: 8px; font-family: monospace; font-size: 14px; font-weight: bold; border: 2px solid #a16207; box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.2); white-space: nowrap;">
+📜 <strong>MIT License</strong>
 </td>
-
-<!-- Dependencies -->
-<td style="
-  padding: 10px 18px;
-  background: #164e63;
-  color: #22d3ee !important;
-  border-radius: 10px;
-  font-family: 'Segoe UI', monospace;
-  font-size: 15px;
-  font-weight: 800;
-  border: 3px solid #06b6d4;
-  box-shadow: 
-    0 0 15px #06b6d4,
-    0 0 25px #06b6d4,
-    0 0 35px rgba(6, 182, 212, 0.7),
-    inset 0 0 10px rgba(6, 182, 212, 0.4);
-  text-shadow: 0 0 8px #22d3ee, 0 0 12px #22d3ee;
-  white-space: nowrap;
-  letter-spacing: 1px;
-">
-🌀 <strong>0 DEPENDENCIES</strong>
+<td style="padding: 9px 17px; background: #0891b2; color: white; border-radius: 8px; font-family: monospace; font-size: 14px; font-weight: bold; border: 2px solid #0e7490; box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.2); white-space: nowrap;">
+⚡ <strong>0 Dependencies</strong>
 </td>
 </tr>
 </table>
 </div>
-
 
 # 🧪 Python User Validation Class
 
