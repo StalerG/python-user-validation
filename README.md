@@ -11,13 +11,13 @@
 - ✅ **Production-ready** - готов к использованию
 
 ## 📦 Установка
-Просто скопируй файл `user.py` в свой проект!
+Просто скопируй файл `polymorph.py` в свой проект!
 
 ```python
 from user import User
 
-user = User('StalerG', 'Buhaem@pivo.com')
-print(user)  # Username: StalerG, Email Address: buhaem@pivo.com
+user = User('username', 'user Email')
+print(user)  
 
 
 # Создание пользователя
