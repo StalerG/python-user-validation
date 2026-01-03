@@ -2,19 +2,19 @@
 <tr>
 <td style="
   padding: 6px 12px; background: #3776ab; color: white;
-  border-radius: 6px; font-weight: 600; border: 1px solid #25567c;
+  border-radius: 10px; font-weight: 600; border: 1px solid #25567c;
 ">🐍 Python 3.9+</td>
 <td style="
   padding: 6px 12px; background: #28a745; color: white;
-  border-radius: 6px; font-weight: 600; border: 1px solid #1c7430;
+  border-radius: 10px; font-weight: 600; border: 1px solid #1c7430;
 ">✅ Tests: 12</td>
 <td style="
   padding: 6px 12px; background: #ffc107; color: black;
-  border-radius: 6px; font-weight: 600; border: 1px solid #d39e00;
+  border-radius: 10px; font-weight: 600; border: 1px solid #d39e00;
 ">📜 MIT License</td>
 <td style="
   padding: 6px 12px; background: #17a2b8; color: white;
-  border-radius: 6px; font-weight: 600; border: 1px solid #117a8b;
+  border-radius: 10px; font-weight: 600; border: 1px solid #117a8b;
 ">⚡ 0 Dependencies</td>
 </tr>
 </table>
