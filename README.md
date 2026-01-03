@@ -1,3 +1,8 @@
+![Python](https://img.shields.io/badge/python-3.9+-blue)
+![Tests](https://img.shields.io/badge/tests-12_passed-green)
+![License](https://img.shields.io/badge/license-MIT-yellow)
+![Dependencies](https://img.shields.io/badge/dependencies-0-brightgreen)
+
 # 🧪 Python User Validation Class
 
 Простой, но мощный класс для валидации пользователей на чистом Python.  
