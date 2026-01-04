@@ -21,7 +21,8 @@ jobs:
       - name: Get download count
         id: downloads
         run: |
-          response=$(curl -s -H "Authorization: token ${{ secrets.GITHUB_TOKEN }}" "https://api.github.com/repos/${{ github.repository }}/releases")
+          response=$(curl -s -H "Authorization: token ${{ secrets.GITHUB_TOKEN }}" \
+            "https://api.github.com/repos/${{ github.repository }}/releases")
           
           if [ "$response" = "[]" ]; then
             echo "total=0" >> $GITHUB_OUTPUT
@@ -35,13 +36,31 @@ jobs:
       - name: Update README
         run: |
           total="${{ steps.downloads.outputs.total }}"
-          sed -i "s|https://img.shields.io/github/downloads/.*?.*\&color=7c3aed|https://img.shields.io/github/downloads/${{ github.repository }}/total?label=$total+downloads\&color=7c3aed\&style=flat-square|" README.md
+          
+          # Форматируем число с разделителями тысяч (1,234)
+          if command -v python3 >/dev/null 2>&1; then
+            formatted=$(python3 -c "print('{:,}'.format($total))")
+          else
+            formatted=$total
+          fi
+          
+          echo "Setting download count to: $formatted downloads"
+          
+          # Правильная замена с %20 для пробела
+          sed -i "s|https://img.shields.io/github/downloads/.*total?.*|https://img.shields.io/github/downloads/${{ github.repository }}/total?label=$formatted%20downloads\&color=7c3aed\&style=flat-square|" README.md
           
       - name: Commit and push
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
-          git pull origin main
+          
+          git pull origin main --rebase
           git add README.md
-          git commit -m "📥 Update download counter: ${{ steps.downloads.outputs.total }}"
-          git push origin main
+          
+          if ! git diff --staged --quiet; then
+            git commit -m "📥 Update download counter: ${{ steps.downloads.outputs.total }}"
+            git push origin main
+            echo "Changes pushed successfully"
+          else
+            echo "No changes to commit"
+          fi
