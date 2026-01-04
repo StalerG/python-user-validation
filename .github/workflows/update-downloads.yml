@@ -18,11 +18,9 @@ jobs:
       - name: Get download count
         id: downloads
         run: |
-          # Простой вариант без сложного парсинга
           response=$(curl -s "https://api.github.com/repos/${{ github.repository }}/releases")
           total=0
           
-          # Считаем через grep и awk
           if [ "$response" != "[]" ]; then
             total=$(echo "$response" | grep -o '"download_count": [0-9]*' | awk '{sum+=$2} END{print sum}')
           fi
@@ -34,17 +32,17 @@ jobs:
         run: |
           total="${{ steps.downloads.outputs.total }}"
           
-          # Форматируем с запятыми (1,234)
+          # Форматируем число
           if [ "$total" -gt 999 ]; then
-            formatted=$(echo $total | sed ':a;s/\B[0-9]\{3\}\>/,&/;ta')
+            formatted=$(echo $total | awk '{printf "%\047d\n", $0}')
           else
             formatted=$total
           fi
           
           echo "Setting: $formatted downloads"
           
-          # Заменяем число
-          sed -i "s|label=[0-9,]*%20downloads|label=$formatted%20downloads|g" README.md
+          # ЗАМЕНА ВСЕГО URL БЕЙДЖА ПРОСТО
+          sed -i "s|https://img.shields.io/github/downloads/.*/total?.*|https://img.shields.io/github/downloads/${{ github.repository }}/total?label=$formatted%20downloads\&color=7c3aed\&style=flat-square|g" README.md
           
       - name: Commit
         run: |
