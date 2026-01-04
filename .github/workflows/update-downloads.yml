@@ -26,8 +26,8 @@ jobs:
           total="${{ steps.downloads.outputs.total }}"
           # Форматируем (1,234)
           formatted=$(python3 -c "print('{:,}'.format($total))")
-          # Заменяем ВЕСЬ URL бейджа
-          sed -i "s|https://img.shields.io/github/downloads/.*total?.*|https://img.shields.io/github/downloads/StalerG/python-user-validation/total?label=$formatted%20downloads\&color=7c3aed\&style=flat-square|g" README.md
+          # БЕЗОПАСНАЯ замена - только число между label= и %20
+          sed -i "s|label=[0-9,]*%20|label=$formatted%20|g" README.md
           
       - name: Commit
         run: |
