@@ -21,7 +21,6 @@
 </tr>
 </table>
 </div>
-
 <!-- Просто текстовая ссылка под таблицей, но со счётчиком -->
 <div align="center" style="margin-top: 10px;">
 <a href="https://github.com/StalerG/python-user-validation/releases">
