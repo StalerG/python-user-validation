@@ -1,0 +1,47 @@
+name: Update Download Counter
+
+on:
+  schedule:
+    - cron: '0 */6 * * *'  # Каждые 6 часов
+  workflow_dispatch:  # Можно запустить вручную
+
+permissions:
+  contents: write
+
+jobs:
+  update:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v4
+        
+      - name: Get download count
+        id: get_downloads
+        run: |
+          RESPONSE=$(curl -s "https://api.github.com/repos/${{ github.repository }}/releases")
+          TOTAL=0
+          
+          # Парсим JSON и суммируем downloads
+          while IFS= read -r count; do
+            TOTAL=$((TOTAL + count))
+          done < <(echo "$RESPONSE" | grep -o '"download_count":[0-9]*' | cut -d: -f2)
+          
+          echo "total=$TOTAL" >> $GITHUB_OUTPUT
+          echo "Download count: $TOTAL"
+          
+      - name: Update README
+        run: |
+          # Форматируем число (1,234 вместо 1234)
+          FORMATTED=$(printf "%'d" ${{ steps.get_downloads.outputs.total }})
+          
+          # Заменяем плейсхолдер в README.md
+          sed -i "s/{{ DOWNLOADS_COUNT }}/$FORMATTED/g" README.md
+          
+      - name: Commit changes
+        run: |
+          git config user.name "github-actions"
+          git config user.email "actions@github.com"
+          git add README.md
+          git diff --quiet && exit 0
+          git commit -m "📥 Update download counter: ${{ steps.get_downloads.outputs.total }}"
+          git push
