@@ -1,26 +1,8 @@
-<div align="center" style="margin: 25px 0;">
-<table style="border-spacing: 10px; border-collapse: separate; margin: 0 auto;">
-<tr>
-<td style="padding: 9px 17px; background: #2563eb; color: white; border-radius: 8px; font-family: monospace; font-size: 14px; font-weight: bold; border: 2px solid #1d4ed8; box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.2); white-space: nowrap;">
-🐍 <strong>Python 3.9+</strong>
-</td>
-<td style="padding: 9px 17px; background: #16a34a; color: white; border-radius: 8px; font-family: monospace; font-size: 14px; font-weight: bold; border: 2px solid #15803d; box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.2); white-space: nowrap;">
-✅ <strong>Tests: 12</strong>
-</td>
-<td style="padding: 9px 17px; background: #ca8a04; color: white; border-radius: 8px; font-family: monospace; font-size: 14px; font-weight: bold; border: 2px solid #a16207; box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.2); white-space: nowrap;">
-📜 <strong>MIT License</strong>
-</td>
-<td style="padding: 9px 17px; background: #0891b2; color: white; border-radius: 8px; font-family: monospace; font-size: 14px; font-weight: bold; border: 2px solid #0e7490; box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.2); white-space: nowrap;">
-⚡ <strong>0 Dependencies</strong>
-</td>
-<td style="padding: 9px 17px; background: #7c3aed; color: white; border-radius: 8px; font-family: monospace; font-size: 14px; font-weight: bold; border: 2px solid #5b21b6; box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.2); white-space: nowrap; display: flex; align-items: center; justify-content: center; gap: 8px;">
-<a href="https://github.com/StalerG/python-user-validation/releases" style="color: white; text-decoration: none; display: flex; align-items: center; gap: 8px;">
-<img src="https://img.shields.io/github/downloads/StalerG/python-user-validation/total?label=10%20downloads&color=7c3aed&style=flat-square" alt="Downloads" style="height: 20px; border-radius: 3px; background: #5b21b6; padding: 0 4px;">
-</a>
-</td>
-</tr>
-</table>
-</div>
+![Python 3.9+](https://img.shields.io/badge/Python-3.9%2B-blue)
+![Tests: 12](https://img.shields.io/badge/Tests-12-green)
+![MIT License](https://img.shields.io/badge/License-MIT-yellow)
+![0 Dependencies](https://img.shields.io/badge/Dependencies-0-cyan)
+![Downloads](https://img.shields.io/github/downloads/StalerG/python-user-validation/total)
 
 # 🧪 Python User Validation Class
 
