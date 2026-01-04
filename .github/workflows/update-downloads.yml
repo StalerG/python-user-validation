@@ -18,7 +18,6 @@ jobs:
       - name: Get downloads
         id: downloads
         run: |
-          # Самый простой способ
           data=$(curl -s "https://api.github.com/repos/${{ github.repository }}/releases")
           total=$(echo "$data" | grep -o '"download_count": [0-9]*' | awk '{sum+=$2} END{print sum}')
           if [ -z "$total" ]; then total=0; fi
@@ -28,16 +27,7 @@ jobs:
       - name: Update badge
         run: |
           total="${{ steps.downloads.outputs.total }}"
-          
-          # Форматируем число (1,234)
-          if [ "$total" -ge 1000 ]; then
-            formatted=$(echo $total | sed -E ':a;s/\B[0-9]{3}\>/,&/;ta')
-          else
-            formatted=$total
-          fi
-          
-          # Простая замена числа в label
-          sed -i "s|label=[0-9,]*%20downloads|label=$formatted%20downloads|" README.md
+          sed -i "s|label=[0-9]*%20downloads|label=$total%20downloads|g" README.md
           
       - name: Commit
         run: |
