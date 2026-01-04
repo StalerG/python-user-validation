@@ -15,7 +15,7 @@
 </td>
 <td style="padding: 9px 17px; background: #7c3aed; color: white; border-radius: 8px; font-family: monospace; font-size: 14px; font-weight: bold; border: 2px solid #5b21b6; box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.2); white-space: nowrap; display: flex; align-items: center; justify-content: center; gap: 8px;">
 <a href="https://github.com/StalerG/python-user-validation/releases" style="color: white; text-decoration: none; display: flex; align-items: center; gap: 8px;">
-<img src="https://img.shields.io/github/downloads/StalerG/python-user-validation/total?label=0+downloads&color=7c3aed&style=flat-square" alt="Downloads" style="height: 20px; border-radius: 3px; background: #5b21b6; padding: 0 4px;">
+<img src="https://img.shields.io/github/downloads/StalerG/python-user-validation/total?label=0%20downloads&color=7c3aed&style=flat-square" alt="Downloads" style="height: 20px; border-radius: 3px; background: #5b21b6; padding: 0 4px;">
 <strong>Download</strong>
 </a>
 </td>
