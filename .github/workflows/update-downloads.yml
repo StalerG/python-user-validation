@@ -2,7 +2,7 @@ name: Update Download Counter
 
 on:
   schedule:
-    - cron: '*/10 * * * *'  # Каждые 10 минут для теста
+    - cron: '*/10 * * * *'
   workflow_dispatch:
 
 permissions:
@@ -12,26 +12,26 @@ jobs:
   update:
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout repo
+      - name: Checkout with token
         uses: actions/checkout@v4
-        
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          fetch-depth: 0
+          
       - name: Get download count
         id: downloads
         run: |
-          # Получаем данные о релизах
-          response=$(curl -s "https://api.github.com/repos/${{ github.repository }}/releases")
+          response=$(curl -s -H "Authorization: token ${{ secrets.GITHUB_TOKEN }}" \
+            "https://api.github.com/repos/${{ github.repository }}/releases")
           
-          # Если нет релизов
           if [ "$response" = "[]" ]; then
             echo "total=0" >> $GITHUB_OUTPUT
             exit 0
           fi
           
-          # Суммируем скачивания ВСЕХ файлов во ВСЕХ релизах
           total=0
-          downloads=$(echo "$response" | grep -o '"download_count":[0-9]*' | cut -d: -f2)
-          
-          for count in $downloads; do
+          # Правильный парсинг JSON
+          echo "$response" | jq -r '.[].assets[]?.download_count // 0' | while read count; do
             total=$((total + count))
           done
           
@@ -40,30 +40,33 @@ jobs:
           
       - name: Update README
         run: |
-          # Форматируем число
           total="${{ steps.downloads.outputs.total }}"
           
           if [ "$total" -eq 0 ]; then
             formatted="0"
           else
-            # Для Mac/Linux
             formatted=$(printf "%'d" $total 2>/dev/null || echo $total)
           fi
           
-          echo "Formatted number: $formatted"
+          echo "Setting download count to: $formatted"
           
-          # Заменяем в README
-          sed -i "s/{{ DOWNLOADS_COUNT }}/$formatted/g" README.md
+          # Заменяем ЛЮБОЕ число после ⬇️
+          sed -i 's/⬇️ <strong>[0-9,]*<\/strong> Downloads/⬇️ <strong>'"$formatted"'<\/strong> Downloads/g' README.md
           
-      - name: Commit changes
+      - name: Commit and push
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
+          
+          # Обязательно пуллим перед пушем
+          git pull origin main --rebase --autostash
+          
           git add README.md
           
-          if git diff --staged --quiet; then
-            echo "No changes"
-          else
+          if ! git diff --staged --quiet; then
             git commit -m "📥 Update download counter: ${{ steps.downloads.outputs.total }}"
-            git push
+            git push origin main
+            echo "Changes pushed successfully"
+          else
+            echo "No changes to commit"
           fi
