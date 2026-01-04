@@ -2,7 +2,7 @@ name: Update Download Counter
 
 on:
   schedule:
-    - cron: '*/10 * * * *'
+    - cron: '0 */2 * * *'
   workflow_dispatch:
 
 permissions:
@@ -15,38 +15,34 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
         
-      - name: Get download count
+      - name: Get downloads
         id: downloads
         run: |
-          response=$(curl -s "https://api.github.com/repos/${{ github.repository }}/releases")
-          total=0
-          
-          if [ "$response" != "[]" ]; then
-            total=$(echo "$response" | grep -o '"download_count": [0-9]*' | awk '{sum+=$2} END{print sum}')
-          fi
-          
+          # Самый простой способ
+          data=$(curl -s "https://api.github.com/repos/${{ github.repository }}/releases")
+          total=$(echo "$data" | grep -o '"download_count": [0-9]*' | awk '{sum+=$2} END{print sum}')
+          if [ -z "$total" ]; then total=0; fi
           echo "total=$total" >> $GITHUB_OUTPUT
           echo "Downloads: $total"
           
-      - name: Update README
+      - name: Update badge
         run: |
           total="${{ steps.downloads.outputs.total }}"
           
-          # Форматируем число
-          formatted=$(python3 -c "print('{:,}'.format($total))")
+          # Форматируем число (1,234)
+          if [ "$total" -ge 1000 ]; then
+            formatted=$(echo $total | sed -E ':a;s/\B[0-9]{3}\>/,&/;ta')
+          else
+            formatted=$total
+          fi
           
-          echo "Setting: $formatted downloads"
-          
-          # БЕЗОПАСНАЯ замена - только label=ЧИСЛО
-          # Сначала пробуем с %20
-          sed -i "s|label=[0-9,]*%20downloads|label=$formatted%20downloads|g" README.md
-          # Если не нашел, пробуем с + (старый вариант)
-          sed -i "s|label=[0-9,]*+downloads|label=$formatted%20downloads|g" README.md
+          # Простая замена числа в label
+          sed -i "s|label=[0-9,]*%20downloads|label=$formatted%20downloads|" README.md
           
       - name: Commit
         run: |
           git config user.name "github-actions"
           git config user.email "github-actions@github.com"
           git add README.md
-          git commit -m "📊 Downloads: ${{ steps.downloads.outputs.total }}" || exit 0
+          git commit -m "📥 ${{ steps.downloads.outputs.total }} downloads" || exit 0
           git push
