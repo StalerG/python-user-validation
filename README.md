@@ -1,3 +1,4 @@
+
 ![Python 3.9+](https://img.shields.io/badge/Python-3.9%2B-blue)
 ![Tests: 12](https://img.shields.io/badge/Tests-12-green)
 ![MIT License](https://img.shields.io/badge/License-MIT-yellow)
