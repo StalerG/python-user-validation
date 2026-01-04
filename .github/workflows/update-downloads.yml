@@ -12,67 +12,44 @@ jobs:
   update:
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout with token
+      - name: Checkout
         uses: actions/checkout@v4
-        with:
-          token: ${{ secrets.GITHUB_TOKEN }}
-          
-      - name: Setup Python
-        uses: actions/setup-python@v4
-        with:
-          python-version: '3.10'
-          
-      - name: Get download count using Python
+        
+      - name: Get download count
         id: downloads
         run: |
-          python3 << 'EOF'
-          import os, json, urllib.request, sys
+          # Простой вариант без сложного парсинга
+          response=$(curl -s "https://api.github.com/repos/${{ github.repository }}/releases")
+          total=0
           
-          token = os.environ['GITHUB_TOKEN']
-          repo = os.environ['GITHUB_REPOSITORY']
+          # Считаем через grep и awk
+          if [ "$response" != "[]" ]; then
+            total=$(echo "$response" | grep -o '"download_count": [0-9]*' | awk '{sum+=$2} END{print sum}')
+          fi
           
-          url = f'https://api.github.com/repos/{repo}/releases'
-          req = urllib.request.Request(url)
-          req.add_header('Authorization', f'token {token}')
-          
-          with urllib.request.urlopen(req) as response:
-              data = json.load(response)
-          
-          total = 0
-          for release in data:
-              for asset in release.get('assets', []):
-                  total += asset.get('download_count', 0)
-          
-          print(f'total={total}')
-          EOF
+          echo "total=$total" >> $GITHUB_OUTPUT
+          echo "Downloads: $total"
           
       - name: Update README
         run: |
           total="${{ steps.downloads.outputs.total }}"
           
-          # Форматируем число
-          formatted=$(python3 -c "
-          num = $total
-          if num == 0:
-              print('0')
-          else:
-              print(f'{num:,}')
-          ")
+          # Форматируем с запятыми (1,234)
+          if [ "$total" -gt 999 ]; then
+            formatted=$(echo $total | sed ':a;s/\B[0-9]\{3\}\>/,&/;ta')
+          else
+            formatted=$total
+          fi
           
-          echo "Updating to: $formatted downloads"
+          echo "Setting: $formatted downloads"
           
-          # Используем правильный синтаксис для sed
+          # Заменяем число
           sed -i "s|label=[0-9,]*%20downloads|label=$formatted%20downloads|g" README.md
           
-      - name: Commit and push
+      - name: Commit
         run: |
-          git config user.name "github-actions[bot]"
-          git config user.email "github-actions[bot]@users.noreply.github.com"
-          
+          git config user.name "github-actions"
+          git config user.email "github-actions@github.com"
           git add README.md
-          if git diff --cached --quiet; then
-            echo "No changes"
-          else
-            git commit -m "📥 Downloads: ${{ steps.downloads.outputs.total }}"
-            git push
-          fi
+          git commit -m "📊 Downloads: ${{ steps.downloads.outputs.total }}" || exit 0
+          git push
