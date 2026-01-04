@@ -2,7 +2,7 @@ name: Update Download Counter
 
 on:
   schedule:
-    - cron: '0 */6 * * *'  # Каждые 6 часов
+    - cron: '0 */6 * * *'
   workflow_dispatch:
 
 permissions:
@@ -18,42 +18,41 @@ jobs:
       - name: Get download count
         id: get_count
         run: |
-          # Простой и надежный подсчет
-          COUNT=$(curl -s "https://api.github.com/repos/${{ github.repository }}/releases" | \
-            python3 -c "
-import sys, json
-try:
-    releases = json.load(sys.stdin)
-    total = sum(
-        asset.get('download_count', 0)
-        for release in releases
-        for asset in release.get('assets', [])
-    )
-    print(total)
-except:
-    print(0)
-")
+          data=$(curl -s "https://api.github.com/repos/${{ github.repository }}/releases")
+          if [ "$data" = "[]" ]; then
+            COUNT=0
+          else
+            COUNT=$(echo "$data" | grep -o '"download_count": [0-9]*' | awk '{sum+=$2} END{print sum}')
+          fi
           echo "count=$COUNT" >> $GITHUB_OUTPUT
           echo "Total downloads: $COUNT"
           
       - name: Update README
         run: |
-          # Форматируем число с запятыми (1,234)
-          formatted_count=$(python3 -c "print('{:,}'.format(${{ steps.get_count.outputs.count }}))")
+          # Простое форматирование без сложного Python
+          COUNT="${{ steps.get_count.outputs.count }}"
           
-          # БЕЗОПАСНАЯ замена - только число в label
-          sed -i "s|label=[0-9,]*%20downloads|label=${formatted_count}%20downloads|g" README.md
+          if [ "$COUNT" -eq 0 ]; then
+            formatted="0"
+          elif [ "$COUNT" -lt 1000 ]; then
+            formatted="$COUNT"
+          else
+            # Форматируем с запятыми через Python
+            formatted=$(python3 -c "print('{:,}'.format($COUNT))")
+          fi
+          
+          echo "Setting: $formatted downloads"
+          sed -i "s|label=[0-9,]*%20downloads|label=${formatted}%20downloads|" README.md
           
       - name: Commit changes
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
-          
           git add README.md
+          
           if git diff --cached --quiet; then
             echo "No changes needed"
           else
-            git commit -m "📊 Update download counter: ${{ steps.get_count.outputs.count }}"
+            git commit -m "📊 Downloads: ${{ steps.get_count.outputs.count }}"
             git push
-            echo "Updated to ${{ steps.get_count.outputs.count }} downloads"
           fi
