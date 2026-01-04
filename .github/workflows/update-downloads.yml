@@ -2,7 +2,7 @@ name: Update Download Counter
 
 on:
   schedule:
-    - cron: '0 */6 * * *'
+    - cron: '*/10 * * * *'  # Каждые 10 минут для теста
   workflow_dispatch:
 
 permissions:
@@ -14,51 +14,46 @@ jobs:
     steps:
       - name: Checkout repo
         uses: actions/checkout@v4
-        with:
-          token: ${{ secrets.GITHUB_TOKEN }}
-          
+        
       - name: Get download count
-        id: get_downloads
+        id: downloads
         run: |
           # Получаем данные о релизах
-          RESPONSE=$(curl -s -H "Authorization: token ${{ secrets.GITHUB_TOKEN }}" \
-            "https://api.github.com/repos/${{ github.repository }}/releases")
+          response=$(curl -s "https://api.github.com/repos/${{ github.repository }}/releases")
           
-          # Если нет релизов или ошибка
-          if [ -z "$RESPONSE" ] || [ "$RESPONSE" = "[]" ]; then
+          # Если нет релизов
+          if [ "$response" = "[]" ]; then
             echo "total=0" >> $GITHUB_OUTPUT
-            echo "No releases found"
             exit 0
           fi
           
-          # Суммируем скачивания
-          TOTAL=0
-          DOWNLOADS=$(echo "$RESPONSE" | grep -o '"download_count":[0-9]*' | cut -d: -f2)
+          # Суммируем скачивания ВСЕХ файлов во ВСЕХ релизах
+          total=0
+          downloads=$(echo "$response" | grep -o '"download_count":[0-9]*' | cut -d: -f2)
           
-          for count in $DOWNLOADS; do
-            TOTAL=$((TOTAL + count))
+          for count in $downloads; do
+            total=$((total + count))
           done
           
-          echo "total=$TOTAL" >> $GITHUB_OUTPUT
-          echo "Total downloads: $TOTAL"
+          echo "total=$total" >> $GITHUB_OUTPUT
+          echo "Total downloads: $total"
           
       - name: Update README
         run: |
-          # Форматируем число (1,234 вместо 1234)
-          if [ "${{ steps.get_downloads.outputs.total }}" -eq 0 ]; then
-            FORMATTED="0"
+          # Форматируем число
+          total="${{ steps.downloads.outputs.total }}"
+          
+          if [ "$total" -eq 0 ]; then
+            formatted="0"
           else
-            FORMATTED=$(printf "%'d" ${{ steps.get_downloads.outputs.total }})
+            # Для Mac/Linux
+            formatted=$(printf "%'d" $total 2>/dev/null || echo $total)
           fi
           
-          echo "Formatted: $FORMATTED"
+          echo "Formatted number: $formatted"
           
-          # Заменяем плейсхолдер в README
-          sed -i "s/{{ DOWNLOADS_COUNT }}/$FORMATTED/g" README.md
-          
-          # Показываем что изменилось
-          echo "Updated README.md"
-          grep -n "{{ DOWNLOADS_COUNT }}\|$FORMATTED" README.md || true
+          # Заменяем в README
+          sed -i "s/{{ DOWNLOADS_COUNT }}/$formatted/g" README.md
           
       - name: Commit changes
         run: |
@@ -66,11 +61,9 @@ jobs:
           git config user.email "github-actions[bot]@users.noreply.github.com"
           git add README.md
           
-          # Проверяем есть ли изменения
           if git diff --staged --quiet; then
-            echo "No changes to commit"
+            echo "No changes"
           else
-            git commit -m "📥 Update download counter: ${{ steps.get_downloads.outputs.total }}"
+            git commit -m "📥 Update download counter: ${{ steps.downloads.outputs.total }}"
             git push
-            echo "Changes committed and pushed"
           fi
